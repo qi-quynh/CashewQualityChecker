@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dự đoán hạt điều</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h2 class="mb-4">🟢 Dự đoán hạt điều: NGUYÊN, VỠ hoặc CÒN VỎ?</h2>
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required class="form-control mb-3">
+      <button type="submit" class="btn btn-primary">Dự đoán</button>
+    </form>
+
+    {% if image_path %}
+      <div class="mt-4">
+        <h5>Kết quả:</h5>
+        <img src="{{ image_path }}" alt="Uploaded Image" class="img-fluid" style="max-width:300px;">
+        <p class="mt-2">✅ <strong>{{ prediction }}</strong> – Độ tin cậy: {{ confidence }}</p>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
