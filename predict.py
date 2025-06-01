@@ -3,30 +3,32 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 import sys
 
-# ✅ Load model đã huấn luyện
+# Load model đã huấn luyện
 model = tf.keras.models.load_model('cashew_model_3class.h5')
 
-# ✅ Danh sách class theo thứ tự bạn đã huấn luyện
-class_names = ['nguyen', 'vo']  # phải đúng thứ tự đã in ra từ train_generator.class_indices
+# Lấy class names đúng theo thứ tự index từ train_generator.class_indices
+# Ví dụ: {'con_vo': 0, 'nguyen': 1, 'vo': 2}
+class_names = ['con_vo', 'nguyen', 'vo']
 
-# ✅ Kích thước ảnh đầu vào đúng như lúc huấn luyện
+# Kích thước ảnh đầu vào (phải đúng như khi train)
 IMG_SIZE = 150
 
-# ✅ Load và xử lý ảnh đầu vào
 def predict_image(img_path):
+    # Load ảnh và resize
     img = image.load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
-    img_array = image.img_to_array(img) / 255.0  # Chuẩn hóa như lúc train
-    img_array = np.expand_dims(img_array, axis=0)  # Đưa vào batch có shape (1, 150, 150, 3)
+    img_array = image.img_to_array(img) / 255.0  # Chuẩn hóa
+    img_array = np.expand_dims(img_array, axis=0)  # batch_size=1
 
-    # ✅ Dự đoán
-    predictions = model.predict(img_array)
-    predicted_class = class_names[np.argmax(predictions)]
-    confidence = np.max(predictions)
+    # Dự đoán
+    predictions = model.predict(img_array)  # Output shape (1,3)
+    predicted_index = np.argmax(predictions)
+    confidence = predictions[0][predicted_index]
+
+    predicted_class = class_names[predicted_index]
 
     print(f"Ảnh: {img_path}")
     print(f"✅ Dự đoán: {predicted_class.upper()} ({confidence*100:.2f}%)")
 
-# ✅ Cho phép chạy qua dòng lệnh: python predict.py path/to/image.jpg
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("⚠️  Vui lòng truyền đường dẫn ảnh cần dự đoán.")
